@@ -8,7 +8,6 @@ from makedir import makedir, removedir
 from alert import alert
 
 def rename_files(directory, current_name, name):
-    print(name)
     prev_name = get_name_file(current_name)
     sistema = platform.system()
     prev_absolute_path = ""

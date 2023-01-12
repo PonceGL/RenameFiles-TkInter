@@ -10,6 +10,10 @@ def run():
     root = tk.Tk()
     # Establece el título de la ventana
     root.title('Renombrar archivos')
+    # And Image should be in the same folder where there is script saved 
+    icon = tk.PhotoImage(file = r'D:\Usuarios\vmullor\Documents\projects\RenameFiles-TkInter\assets\transfer-color\icons8-transfer-48.png')   
+    # Icon set for program window
+    root.iconphoto(False, icon)  
 
     # Establece el ancho y alto mínimo y máximo de la ventana
     root.minsize(width=375, height=600)

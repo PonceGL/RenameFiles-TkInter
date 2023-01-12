@@ -1,5 +1,6 @@
 import os
 import platform
+import sys
 from PIL import Image
 import pytesseract
 from pytesseract import TesseractError, TesseractNotFoundError
@@ -24,15 +25,26 @@ def get_image(path):
 def get_text(path):
     image = get_image(path)
     try:
-        pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files (x86)\Tesseract-OCR\tesseract"
+        # print("getattr(sys, 'frozen', False)")
+        # print(getattr(sys, 'frozen', False))
+        # print("_path = os.path.join(sys._MEIPASS, 'tesseract.exe')")
+        # print(os.path.join(sys._MEIPASS, r'Tesseract-OCR\tesseract'))
+        if getattr(sys, 'frozen', False):
+            _path = os.path.join(sys._MEIPASS, r'Tesseract-OCR\tesseract')
+            print(_path)
+            pytesseract.pytesseract.tesseract_cmd =_path
+        else:
+            pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"
+
         text = pytesseract.image_to_string(image)
         text = text.replace('-\n','')
         new_name = get_new_name(text)
         return new_name
     except TesseractNotFoundError:
+        print("TesseractNotFoundError")
         return ""
     except TesseractError:
-
+        print("TesseractError")
         return ""
     
 
