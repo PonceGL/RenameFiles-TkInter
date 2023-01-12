@@ -1,4 +1,5 @@
 import os
+import platform
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
@@ -6,10 +7,25 @@ from handle_image import convert, get_text, get_name_file
 from makedir import makedir, removedir
 from alert import alert
 
-def rename_files(directory, current_name, new_name):
+def rename_files(directory, current_name, name):
+    print(name)
     prev_name = get_name_file(current_name)
-    prev_absolute_path = f'{directory}/{prev_name.replace(".jpg", ".pdf")}'
-    new_absolute_path = f'{directory}/{new_name}'
+    sistema = platform.system()
+    prev_absolute_path = ""
+    new_absolute_path = ""
+    prev_name = prev_name.replace(".jpg", ".pdf")
+    new_name = name
+    if name == "NO-SE-ENCONTRO.pdf":
+        new_name = f"{name}-{prev_name}"
+        new_name = new_name.replace(".pdf", "")
+
+    if sistema == "Windows":
+        prev_absolute_path = f'{directory}\{prev_name}'
+        new_absolute_path = f'{directory}\{new_name}.pdf'
+    else:
+        prev_absolute_path = f'{directory}/{prev_name}'
+        new_absolute_path = f'{directory}/{new_name}.pdf'
+
     try:
         os.rename(prev_absolute_path, new_absolute_path)
     except FileExistsError:
@@ -60,11 +76,20 @@ def update_files(files, directory, progressbar, frame):
         file_paths.append(file_path)
         progress = (100 / totalFiles) * counter
         path_image  = convert(file_path, path_dir)
-        new_name = get_text(path_image)
-        new_absolute_path = rename_files(directory, path_image, new_name)
-        show_names(int(counter), text, new_absolute_path)
-        progressbar["value"] = progress  # Actualiza el valor de la barra de progreso
-        progressbar.update()  #  Actualiza visualmente la barra de progreso
+        if not path_image:
+            alert('Error', 'No stá instalado poppler, no se puede continuar')
+            progressbar.pack_forget()
+            return
+        else:
+            new_name = get_text(path_image)
+            if not new_name:
+                alert('Error', 'No stá instalado Tesserac, no se puede continuar')
+                progressbar.pack_forget()
+                return
+            new_absolute_path = rename_files(directory, path_image, new_name)
+            show_names(int(counter), text, new_absolute_path)
+            progressbar["value"] = progress  # Actualiza el valor de la barra de progreso
+            progressbar.update()  #  Actualiza visualmente la barra de progreso
 
     progressbar.pack_forget()
 
@@ -93,4 +118,6 @@ def select_folder(progressbar, frame):
         return None
     else:
         images_dir = update_files(files, directory, progressbar, frame)
-        removedir(images_dir)
+        if images_dir:
+            removedir(images_dir)
+            
