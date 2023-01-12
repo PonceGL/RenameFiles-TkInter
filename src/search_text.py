@@ -1,6 +1,5 @@
 import re
 import os
-# from typing import Tuple
 
 def search_title(text):
     RegExTitle = re.compile(r'([0-9]{1,4})/([0-9]{4})')

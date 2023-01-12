@@ -1,18 +1,32 @@
+import os
+import platform
 import tkinter as tk
 from tkinter import ttk
 from handle_files import select_folder
-# from alert import alert
 from menubar import menu
 
 
 def run():
+    sistema = platform.system()
     # Crea la ventana principal de tkinter
     root = tk.Tk()
     # Establece el título de la ventana
     root.title('Renombrar archivos')
-    # And Image should be in the same folder where there is script saved 
-    icon = tk.PhotoImage(file = r'D:\Usuarios\vmullor\Documents\projects\RenameFiles-TkInter\assets\transfer-color\icons8-transfer-48.png')   
-    # Icon set for program window
+    # Obtine la ruta del icono dependiendo del sistema
+    icon = ""
+    if sistema == "Windows":
+        icon = r'assets\transfer-color\icons8-transfer-48.png'
+        # icon = r'D:\Usuarios\vmullor\Documents\projects\RenameFiles-TkInter\assets\transfer-color\icons8-transfer-48.png'
+    else:
+        icon = r"assets/transfer-color/icons8-transfer-48.png"
+
+    file_path = os.path.dirname(os.path.abspath(__file__))
+    BASE_DIR = os.path.dirname(file_path)
+    path = os.path.join(BASE_DIR, icon)
+
+    # Añade imagen
+    icon = tk.PhotoImage(file=path)
+    # Icono de la ventana del programa
     root.iconphoto(False, icon)  
 
     # Establece el ancho y alto mínimo y máximo de la ventana
