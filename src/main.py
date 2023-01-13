@@ -1,15 +1,23 @@
 import os
 import platform
 import tkinter as tk
-from tkinter import ttk
+import customtkinter
+import threading
+from tkinter import *
 from handle_files import select_folder
 from menubar import menu
+from clock import clock
 
 
 def run():
+    # Modes: system (default), light, dark
+    customtkinter.set_appearance_mode("System")
+    # Themes: blue (default), dark-blue, green
+    customtkinter.set_default_color_theme("blue")
+
     sistema = platform.system()
     # Crea la ventana principal de tkinter
-    root = tk.Tk()
+    root = Tk()  # create CTk window like you do with the Tk window
     # Establece el título de la ventana
     root.title('Renombrar archivos')
     # Obtine la ruta del icono dependiendo del sistema
@@ -27,31 +35,44 @@ def run():
     # Añade imagen
     icon = tk.PhotoImage(file=path)
     # Icono de la ventana del programa
-    root.iconphoto(False, icon)  
+    root.iconphoto(False, icon)
 
     # Establece el ancho y alto mínimo y máximo de la ventana
     root.minsize(width=375, height=600)
     root.resizable(False, False)
-    # root.maxsize(width=1000, height=600)
 
-    # Crea un widget de etiqueta y lo coloca en la ventana
-    label = tk.Label(root, text='Hola, tkinter!')
-    label.pack()
-    # Crea una barra de progreso y la coloca en la ventana
-    progressbar = ttk.Progressbar(root, orient="horizontal", length=300, mode="determinate")
-    # progressbar.pack()
+    root.grid_rowconfigure(0, weight=1)
+    root.grid_rowconfigure(1, weight=1)
+    root.grid_rowconfigure(2, weight=6)
+    root.grid_columnconfigure((0, 1), weight=1)
 
-    frame = tk.Frame(root, width=300, height=200) 
-    # frame.pack()
+    # label = customtkinter.CTkLabel(
+    #     master=root, text='Hola, tkinter!', font=("Helvetica", 18))
+    # label.grid(row=0, column=0, columnspan=2,
+    #            padx=20, sticky="ew")
 
-    # Crea un widget de botón y lo coloca en la ventana
-    button = tk.Button(root, text='Selecciona la carpeta \n donde están tus archivos', font=("Verdana", 18), command=lambda: select_folder(progressbar, frame))
-    button.pack()
+    frame = tk.Frame(root, width=300)
+    frame.grid_rowconfigure(0, weight=1)
+    frame.grid_columnconfigure(0, weight=10)
+    frame.grid_columnconfigure(1, weight=1)
+    # frame.grid(row=2, column=0, columnspan=2, padx=20, pady=20, sticky="nsew")
 
+    scrollbar = customtkinter.CTkScrollbar(frame, orientation='vertical')
+    box = tk.Listbox(frame, width=40, yscrollcommand=scrollbar.set)
+    box.grid(row=0, column=0, sticky="nsew")
+    scrollbar.bind(command=box.yview)
+    # scrollbar.grid(row=0, column=1, sticky="nse")
 
-    
+    progressbar = customtkinter.CTkProgressBar(
+        master=root, orientation="horizontal", width=300, mode="determinate")
+
+    button = customtkinter.CTkButton(master=root, text='Selecciona la carpeta \n donde están tus archivos', border_width=0, corner_radius=10, font=(
+        "Helvetica", 18), command=lambda: select_folder(button, progressbar, frame, box, scrollbar))
+    button.grid(row=1, column=0, columnspan=2,
+                padx=20, sticky="ew")
 
     menu(root, progressbar)
+    clock(root)
     # Inicia el bucle de eventos de tkinter
     root.mainloop()
 

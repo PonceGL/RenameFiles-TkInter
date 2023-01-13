@@ -22,6 +22,15 @@ def get_image(path):
     return image
 
 
+def run_tesseract():
+    if getattr(sys, 'frozen', False):
+        _path = os.path.join(sys._MEIPASS, r'Tesseract-OCR\tesseract')
+        print(_path)
+        pytesseract.pytesseract.tesseract_cmd = _path
+    else:
+        pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"
+
+
 def get_text(path):
     image = get_image(path)
     try:
@@ -29,13 +38,9 @@ def get_text(path):
         # print(getattr(sys, 'frozen', False))
         # print("_path = os.path.join(sys._MEIPASS, 'tesseract.exe')")
         # print(os.path.join(sys._MEIPASS, r'Tesseract-OCR\tesseract'))
-        if getattr(sys, 'frozen', False):
-            _path = os.path.join(sys._MEIPASS, r'Tesseract-OCR\tesseract')
-            print(_path)
-            pytesseract.pytesseract.tesseract_cmd =_path
-        else:
-            pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"
-
+        sistema = platform.system()
+        if sistema == "Windows":
+            run_tesseract()
         text = pytesseract.image_to_string(image)
         text = text.replace('-\n','')
         new_name = get_new_name(text)

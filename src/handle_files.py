@@ -1,29 +1,39 @@
 import os
 import platform
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, END
 from tkinter import filedialog
 from handle_image import convert, get_text, get_name_file
 from makedir import makedir, removedir
 from alert import alert
 
-def rename_files(directory, current_name, name):
-    prev_name = get_name_file(current_name)
+
+def rename_files(directory, current_path, name):
+    print("=============")
+    print("rename_files")
+    print(directory)
+    print(current_path)
+    print(name)
+    prev_name = get_name_file(current_path)
+    print(prev_name)
+    print("=============")
     sistema = platform.system()
-    prev_absolute_path = ""
-    new_absolute_path = ""
-    prev_name = prev_name.replace(".jpg", ".pdf")
+    prev_name = prev_name.replace(".jpg", "")
     new_name = name
-    if name == "NO-SE-ENCONTRO.pdf":
-        new_name = f"{name}-{prev_name}"
-        new_name = new_name.replace(".pdf", "")
+    if name == "NO SE ENCONTRO":
+        new_name = f"❌ {prev_name}"
+
+    prev_absolute_path = f'{directory}/{prev_name}.pdf'
+    new_absolute_path = f'{directory}/{new_name}.pdf'
+
+    print("#################################")
+    print(prev_absolute_path)
+    print(new_absolute_path)
+    print("#################################")
 
     if sistema == "Windows":
-        prev_absolute_path = f'{directory}\{prev_name}'
+        prev_absolute_path = f'{directory}\{prev_name}.pdf'
         new_absolute_path = f'{directory}\{new_name}.pdf'
-    else:
-        prev_absolute_path = f'{directory}/{prev_name}'
-        new_absolute_path = f'{directory}/{new_name}.pdf'
 
     try:
         os.rename(prev_absolute_path, new_absolute_path)
@@ -32,74 +42,65 @@ def rename_files(directory, current_name, name):
 
     return new_absolute_path
 
+
 def clear_frame(frame):
-   for widgets in frame.winfo_children():
-      widgets.destroy()
+    for widgets in frame.winfo_children():
+        widgets.destroy()
 
 
-def show_names_container(frame):
-    frame.pack()
-    text = tk.Text(frame, height=20)
-    text.config(width=30, font=("Courier", 18))
-    text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, pady=10)
-
-    scrollbar = ttk.Scrollbar(frame, orient='vertical', command=text.yview)
-    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-
-    text['yscrollcommand'] = scrollbar.set
-    return text
-
-def show_names(position, text, path):
+def show_names(box, path):
     file_name = get_name_file(path)
-     # Crea un widget de etiqueta, con el nombre del archivo y lo coloca en la ventana
-    position = f'{position}.0'
-    text.insert(position, f"{file_name}\n")
+    # Inserta el nombre de el archivo en el contenedor
+    box.insert(END, file_name)
 
-def update_files(files, directory, progressbar, frame):
-    progressbar.pack()
+
+def remove_progresbar(progressbar, frame):
+    progressbar.grid_forget()
+    frame.grid_forget()
+
+
+def update_files(files, directory, progressbar, frame, box, scrollbar):
     path_dir = makedir()
     # Si la lectura de los archivos fue exitosa, filtra la lista de archivos para incluir solo los PDF
     pdf_files = [f for f in files if f.endswith('.pdf')]
     totalFiles = len(pdf_files)
 
     if totalFiles == 0:
-        progressbar.pack_forget()
+        remove_progresbar(progressbar, frame)
+        removedir(path_dir)
         alert('Error', 'La carpeta debe contener archivos PDF')
         return None
-    text = show_names_container(frame)
-    counter = 0
-    file_paths = []
-    for pdf_file in pdf_files:
-        counter += 1  # Suma 1 al contador en cada iteración
-        file_path = os.path.join(directory, pdf_file)
-        file_paths.append(file_path)
-        progress = (100 / totalFiles) * counter
-        path_image  = convert(file_path, path_dir)
+    numeros_lista = list(range(totalFiles))
+    progressbar.grid(row=1, column=0, columnspan=2, padx=20, sticky="ew")
+    frame.grid(row=2, column=0, columnspan=2, padx=20, pady=20, sticky="nsew")
+    for i, pdf_file in enumerate(numeros_lista):
+        file_path = os.path.join(directory, pdf_files[i])
+        progress = i / totalFiles
+        path_image = convert(file_path, path_dir)
+        if i > 24:
+            scrollbar.grid(row=0, column=1, sticky="nse")
         if not path_image:
             alert('Error', 'No stá instalado poppler, no se puede continuar')
-            progressbar.pack_forget()
+            remove_progresbar(progressbar, frame)
             return
         else:
             new_name = get_text(path_image)
             if not new_name:
                 alert('Error', 'No stá instalado Tesserac, no se puede continuar')
-                progressbar.pack_forget()
+                remove_progresbar(progressbar, frame)
                 return
             new_absolute_path = rename_files(directory, path_image, new_name)
-            show_names(int(counter), text, new_absolute_path)
-            progressbar["value"] = progress  # Actualiza el valor de la barra de progreso
-            progressbar.update()  #  Actualiza visualmente la barra de progreso
+            show_names(box, new_absolute_path)
+            # Actualiza el valor de la barra de progreso
+            progressbar.set(progress)
+            progressbar.update()  # Actualiza visualmente la barra de progreso
 
-    progressbar.pack_forget()
-
+    progressbar.grid_forget()
+    alert('Exito', 'Todos los archivos se han renombrado')
     return path_dir
 
-def select_folder(progressbar, frame):
-    if frame is not None:
-        clear_frame(frame)
-    # Muestra un cuadro de diálogo de selección de carpeta al usuario
-    directory = filedialog.askdirectory()
 
+def get_files(directory):
     # Si el usuario canceló el cuadro de diálogo, devuelve None
     if directory == '':
         return None
@@ -115,8 +116,26 @@ def select_folder(progressbar, frame):
         # Si el archivo seleccionado no es una carpeta, muestra un mensaje de error y devuelve None
         alert('Error', 'El archivo seleccionado no es una carpeta')
         return None
+
+    return files
+
+
+def select_folder(button, progressbar, frame, box, scrollbar):
+    button.grid_forget()
+    if box is not None:
+        clear_frame(box)
+    # Muestra un cuadro de diálogo de selección de carpeta al usuario
+    directory = filedialog.askdirectory()
+
+    files = get_files(directory)
+    if not files:
+        button.grid(row=1, column=0, columnspan=2,
+                    padx=20, sticky="ew")
+        return None
     else:
-        images_dir = update_files(files, directory, progressbar, frame)
+        images_dir = update_files(
+            files, directory, progressbar, frame, box, scrollbar)
         if images_dir:
             removedir(images_dir)
-            
+    button.grid(row=1, column=0, columnspan=2,
+                padx=20, sticky="ew")

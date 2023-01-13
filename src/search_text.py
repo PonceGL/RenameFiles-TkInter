@@ -54,5 +54,5 @@ def search_file(route):
 def get_new_name(text):
     title = search_title(text)
     officeNumber = search_office_number(text)
-    new_name = f'{title.replace(" ", "-")}-{officeNumber.replace(" ", "-")}.pdf'
-    return new_name.replace("NO-SE-ENCONTRO-NO-SE-ENCONTRO", "NO-SE-ENCONTRO")
+    new_name = f'{title} {officeNumber}'
+    return new_name.replace("NO SE ENCONTRO NO SE ENCONTRO", "NO SE ENCONTRO")
