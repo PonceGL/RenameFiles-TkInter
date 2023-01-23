@@ -6,6 +6,17 @@ import pytesseract
 from pytesseract import TesseractError, TesseractNotFoundError
 from pdf2image import convert_from_path
 from search_text import get_new_name
+import cv2
+import numpy as np
+
+def convolution(image):
+    kernel = np.ones((1, 1), np.float32) / 1
+    img_convolved = cv2.filter2D(src=image, ddepth=-1, kernel=kernel)
+    return img_convolved
+
+def clean(image):
+    image_clean = cv2.medianBlur(image, ksize=3)
+    return image_clean
 
 def get_name_file(path):
     path_split = []
@@ -18,8 +29,14 @@ def get_name_file(path):
     return file_name
 
 def get_image(path):
-    image = Image.open(open(path, "rb"))
-    return image
+    path_split = path.split("/")
+    file_name = path_split.pop().replace(".jpg", "")
+    image_cv2 = cv2.imread(path)
+    # ----------------------
+    convolved_image = convolution (image_cv2)
+    image_clean = clean(convolved_image)
+    # ----------------------
+    return image_clean
 
 
 def run_tesseract():
