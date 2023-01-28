@@ -51,10 +51,6 @@ def run_tesseract():
 def get_text(path):
     image = get_image(path)
     try:
-        # print("getattr(sys, 'frozen', False)")
-        # print(getattr(sys, 'frozen', False))
-        # print("_path = os.path.join(sys._MEIPASS, 'tesseract.exe')")
-        # print(os.path.join(sys._MEIPASS, r'Tesseract-OCR\tesseract'))
         sistema = platform.system()
         if sistema == "Windows":
             run_tesseract()

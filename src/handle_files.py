@@ -9,14 +9,7 @@ from alert import alert
 
 
 def rename_files(directory, current_path, name):
-    print("=============")
-    print("rename_files")
-    print(directory)
-    print(current_path)
-    print(name)
     prev_name = get_name_file(current_path)
-    print(prev_name)
-    print("=============")
     sistema = platform.system()
     prev_name = prev_name.replace(".jpg", "")
     new_name = name
@@ -25,11 +18,6 @@ def rename_files(directory, current_path, name):
 
     prev_absolute_path = f'{directory}/{prev_name}.pdf'
     new_absolute_path = f'{directory}/{new_name}.pdf'
-
-    print("#################################")
-    print(prev_absolute_path)
-    print(new_absolute_path)
-    print("#################################")
 
     if sistema == "Windows":
         prev_absolute_path = f'{directory}\{prev_name}.pdf'

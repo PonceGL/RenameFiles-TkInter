@@ -23,8 +23,8 @@ def run():
     # Obtine la ruta del icono dependiendo del sistema
     icon = ""
     if sistema == "Windows":
-        icon = r'assets\transfer-color\icons8-transfer-48.png'
-        # icon = r'D:\Usuarios\vmullor\Documents\projects\RenameFiles-TkInter\assets\transfer-color\icons8-transfer-48.png'
+        # icon = r'assets\transfer-color\icons8-transfer-48.png'
+        icon = r'D:\Usuarios\vmullor\Documents\projects\RenameFiles-TkInter\assets\transfer-color\icons8-transfer-48.png'
     else:
         icon = r"assets/transfer-color/icons8-transfer-48.png"
 

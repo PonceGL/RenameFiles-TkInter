@@ -2,9 +2,9 @@ import re
 import os
 
 def search_title(text):
-    RegExTitle = re.compile(r'([0-9]{1,4})/([0-9]{4})')
-    amparo_lawsuit = re.compile(r'(J\s?U\s?I?\|?\s?C\s?I?\|?\s?O\s?\s?D\s?E\s?\s?A\s?M\s?P\s?A\s?R\s?O)')
-    suspension_incident = re.compile(r'(I?\|?\s?N\s?C\s?I?\|?\s?D\s?E\s?N\s?T\s?E\s?\s?D\s?E\s?\s?S\s?U\s?S\s?P\s?E\s?N\s?I?\|?\s?S\s?Ó\s?N)')
+    RegExTitle = re.compile(r'([0-9]{1,4})\/([0-9]{4})')
+    amparo_lawsuit = re.compile(r'(JU(\||I)C(\||I)O\s?DE\s?AMPARO)')
+    suspension_incident = re.compile(r'(\||I)NC(\||I)DENTE\s?DE\s?SUSPENS(\||I)(Ó|O)N')
     
     find_amparo_lawsuit = amparo_lawsuit.search(text)
     find_suspension_incident = suspension_incident.search(text)
@@ -25,11 +25,11 @@ def search_title(text):
     return "NO SE ENCONTRO"
 
 def search_office_number(text):
-    RegExOfficeNumber = re.compile(r'((7|\/)\s?[0-9]{1,5})\/([0-9]{4})')
+    RegExOfficeNumber = re.compile(r'((7|\/|I|L|i)\s?[0-9]{1,5})\/([0-9]{4})')
 
     match = RegExOfficeNumber.search(text)
 
-    if match:
+    if match is not None:
         document_number = re.sub("((7|\/)\s?)", "", match.group(0))
         document_number = document_number[:-4]
         return f"OF {document_number}"
