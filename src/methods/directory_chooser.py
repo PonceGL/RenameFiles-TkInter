@@ -3,10 +3,12 @@ import sys
 from tkinter import filedialog
 
 class DirectoryChooser:
-    def __init__(self, root=None):
+    def __init__(self, root=None, selected_directory=None):
         pass
         self.root = root
-        self.selected_directory = None
+        self.selected_directory = selected_directory
+        self.files_in_directory = []
+        self.path_files = []
 
     def choose_directory(self):
         try:
@@ -37,12 +39,11 @@ class DirectoryChooser:
             error_message = sys.exc_info()[0]
             print("check_pdf_files Error: {}".format(error_message))
     
-    def list_directory_files(self):
+    def list_directory_files(self, dir = None, ext = ".pdf"):
         try:
-            if self.selected_directory:
-                self.files_in_directory = [f for f in os.listdir(self.selected_directory) if f.endswith('.pdf') and os.path.isfile(os.path.join(self.selected_directory, f))]
-                # pdf_files = [f for f in self.files_in_directory if f.endswith('.pdf')]
-                # self.files_in_directory = pdf_files
+            if self.selected_directory or dir:
+                directory = self.selected_directory or dir
+                self.files_in_directory = [f for f in os.listdir(directory) if f.endswith(ext) and os.path.isfile(os.path.join(directory, f))]
                 return self.files_in_directory
             else:
                 print("No se ha seleccionado un directorio aún.")
@@ -51,3 +52,15 @@ class DirectoryChooser:
             error_message = sys.exc_info()[0]
             print("list_directory_files Error: {}".format(error_message))
             return None
+    
+    
+    def get_path_files(self):
+        paths = []
+        try:
+            for file in self.files_in_directory:
+                paths.append({"path": os.path.join(self.selected_directory, file), "current_name": file, "new_name": "", "path_image": ""})
+        except:
+            error_message = sys.exc_info()[0]
+            print("get_path_files Error: {}".format(error_message))
+        self.path_files = paths
+        return paths
