@@ -1,6 +1,7 @@
 from methods.directory_chooser import DirectoryChooser
 from methods.pdf_converter import PDFConverter
 from methods.get_text import ImageTextExtractor
+from methods.text import TextSearch
 
 class MainProcess():
     def __init__(self, main_frame=None):
@@ -10,6 +11,7 @@ class MainProcess():
         self.main_frame = main_frame
         self.paths = []
         self.pdf = PDFConverter()
+        self.extracted_texts = []
 
     def init_proccess(self):
         selected_directory = self.chooser.choose_directory()
@@ -21,7 +23,18 @@ class MainProcess():
             self.paths = self.chooser.get_path_files()
             self.paths = self.pdf.convert_to_image(self.paths)
             if len(self.paths) > 0:
-                self.text.extract_text(self.paths)
+                self.extracted_texts = self.text.extract_text(self.paths)
+                if len(self.extracted_texts) > 0:
+                    self.handle_text()
+    
+    def handle_text(self):
+        for text_file in self.extracted_texts:
+            text = TextSearch(text_file)
+            result = text.search()
+            # if result:
+            #     print("Se encontró el texto:", result)
+            # else:
+            #     print("No se encontró el texto")
 
 
             

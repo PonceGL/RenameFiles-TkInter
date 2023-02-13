@@ -59,12 +59,12 @@ class PDFConverter:
         # Elimina el directorio si ya existe
         if os.path.exists(dir):
             self.removedir(dir)
-            print("La carpeta ha sido eliminada por que ya existia.")
+            # print("La carpeta ha sido eliminada por que ya existia.")
         try:
         # Crea un nuevo directorio
             os.mkdir(dir)
         except OSError:
             print("La carpeta no pudo ser creada.")
         else:
-            print("La carpeta ha sido creada exitosamente.")
+            # print("La carpeta ha sido creada exitosamente.")
             return dir
