@@ -4,11 +4,6 @@ import platform
 import pytesseract
 import cv2
 import numpy as np
-# from PIL import Image
-
-# https://res.cloudinary.com/duibtuerj/image/upload/v1676324925/Projects/read_files/fi646vas4078s8a22ucw.png
-# https://res.cloudinary.com/duibtuerj/image/upload/v1676324918/Projects/read_files/xfbgezebf2htty4cmspo.png
-
 from methods.directory_chooser import DirectoryChooser
 
 class ImageTextExtractor:
@@ -22,12 +17,13 @@ class ImageTextExtractor:
         else:
             return "/"
 
-    def extract_text(self, path_files):
+    def extract_text(self, path_files, progressbar):
         extracted_texts = []
         if self.sistema == "Windows":
             self.execute_tesseract()
         try:
-            for path_file in path_files:
+            total_files = len(path_files)
+            for i, path_file in enumerate(path_files):
                 files = self.chooser.list_directory_files(path_file['path_image'], ".png")
                 file_string = ""
                 for file in files:
@@ -35,8 +31,11 @@ class ImageTextExtractor:
                     img_rgb =self.get_image(image_path)
                     text = pytesseract.image_to_string(img_rgb)
                     file_string = file_string + text
-                extracted_texts.append(file_string)
-            print("Texto extraído exitosamente.")
+                    path_file['text'] = file_string
+                extracted_texts.append(path_file)
+                progress = progress = (i + 1) / total_files * 100
+                progressbar.update(progress)
+
         except:
             error_message = sys.exc_info()[0]
             print("Error al extraer texto de las imágenes: {}".format(error_message))

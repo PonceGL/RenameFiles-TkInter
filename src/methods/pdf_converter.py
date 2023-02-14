@@ -13,14 +13,15 @@ class PDFConverter:
         self.path_files = []
         self.output_dir = path
 
-    def convert_to_image(self, path_files):
+    def convert_to_image(self, path_files, progressbar):
         self.path_files = path_files
         # Crear el directorio de salida si no existe
         dir = self.makedir(self.output_dir)
         path_files_update = []
 
         try:
-            for pdf in self.path_files:
+            total_files = len(self.path_files)
+            for i, pdf in enumerate(self.path_files):
                 pdf_path = pdf['path']
                 pdf_name = pdf['current_name']
                 current_name = pdf_name.replace(".pdf", "")
@@ -46,6 +47,8 @@ class PDFConverter:
                     pix.save(output_path)
                 pdf["path_image"] = pdf_dir
                 path_files_update.append(pdf)
+                progress = progress = (i + 1) / total_files * 100
+                progressbar.update(progress)
             print("PDFs convertidos a imágenes exitosamente.")
             return path_files_update
         except:

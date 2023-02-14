@@ -5,6 +5,7 @@
 .LSOverride
 test/
 images/
+before/
 
 # Icon must end with two \r
 Icon

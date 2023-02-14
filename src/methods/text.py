@@ -50,9 +50,9 @@ class TextSearch:
             return None
     
     def get_office_number(self):
-        print("[ =============== ]")
-        print(self.text.replace(" ", ""))
-        print("[ =============== ]")
+        # print("[ =============== ]")
+        # print(self.text.replace(" ", ""))
+        # print("[ =============== ]")
         try:
             # match = self.office_number.search(self.text.replace(" ", ""))
             matches = list(self.office_number.finditer(self.text.replace(" ", "")))
@@ -84,8 +84,6 @@ class TextSearch:
         number = self.get_trial_number()
         document = self.get_type_document()
         office = self.get_office_number()
-        # final_name = f"OF {number} {document} {office}"
-        # print(final_name)
         final_name = ""
         if number is not None:
             final_name += f"OF {number} "
@@ -95,20 +93,10 @@ class TextSearch:
             final_name += f"{office}"
 
         if final_name != "":
-            print("[ =============== ]")
-            print("Final Name =====> ")
-            print(final_name)
+            return final_name
         else:
             print("No se pudo formar la cadena final.")
-        # print("[ =============== ]")
-        # print("number")
-        # print(f"OF {number}")
-        # print("document")
-        # print(document)
-        # print("office")
-        # print(office)
-        # print("[ =============== ]")
-        # print("Final Name =====> ")
+            return ""
     
     def convert_array_to_string(self):
         self.text =  " ".join(self.text)

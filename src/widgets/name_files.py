@@ -23,3 +23,6 @@ class MainFrame:
 
     def add_text(self, text):
         self.listbox.insert(tk.END, text)
+    
+    def clear(self):
+        self.listbox.delete(0, tk.END)

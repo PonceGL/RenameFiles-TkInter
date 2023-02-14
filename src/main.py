@@ -13,7 +13,7 @@ class App:
         self.root.resizable(False, False)
         self.root.grid_rowconfigure(0, weight=1)
         self.root.grid_rowconfigure(1, weight=1)
-        self.root.grid_rowconfigure(2, weight=6)
+        self.root.grid_rowconfigure(2, weight=8)
         self.root.grid_columnconfigure(0, weight=1)
 
         self.frame = MainFrame(self.root)
