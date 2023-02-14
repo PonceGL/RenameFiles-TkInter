@@ -64,5 +64,5 @@ class ImageTextExtractor:
                 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"
         except:
             error_message = sys.exc_info()[0]
-        print("Error al especificar la ruta de tesseract: {}".format(error_message))
+            print("Error al especificar la ruta de tesseract: {}".format(error_message))
         

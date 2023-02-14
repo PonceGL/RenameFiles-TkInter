@@ -8,10 +8,12 @@ class MainButton():
         self.main_frame = main_frame
         self.main_process = MainProcess(self.main_frame)
         
-        self.button = tk.Button(self.root, text="Selecciona la carpeta donde están tus archivos", font=('Helvetica', 16), height=5, width=10, bg='#FC7300', fg='#00425A', command=lambda: self.action())
+        # self.button = tk.Button(self.root, text="Selecciona la carpeta donde están tus archivos", font=('Helvetica', 16), height=5, width=10, bg='#FC7300', fg='#00425A', command=lambda: self.action())
         self.button = tk.Button(self.root, text="Selecciona la carpeta donde están tus archivos", height=2, width=10, font=("Helvetica", 16), command=lambda: self.action())
         if platform.system() == "Windows":
-            self.button.config(background="#0A66C2", foreground="#ffffff",
+            self.button.config(
+                text="Selecciona la carpeta \n donde están tus archivos",
+                background="#0A66C2", foreground="#ffffff",
                     borderwidth=0, relief="flat",
                     activebackground="#0A66C2", activeforeground="#ffffff", bd=0, highlightthickness=0,)
 
