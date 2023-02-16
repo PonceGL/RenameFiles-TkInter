@@ -11,7 +11,7 @@
   },
   {
    "optionDest": "onefile",
-   "value": false
+   "value": true
   },
   {
    "optionDest": "console",
@@ -80,10 +80,6 @@
   {
    "optionDest": "datas",
    "value": "C:/Program Files (x86)/Tesseract-OCR;Tesseract-OCR/"
-  },
-  {
-   "optionDest": "datas",
-   "value": "D:\\Usuarios\\vmullor\\Documents\\projects\\RenameFiles-TkInter\\venv\\Lib\\site-packages\\customtkinter;customtkinter/"
   }
  ],
  "nonPyinstallerOptions": {
