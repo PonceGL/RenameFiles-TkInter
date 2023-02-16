@@ -55,7 +55,11 @@ class MainProcess():
             text = TextSearch(text_file['text'])
             result = text.search()
 
-            text_file['new_name'] = result
+            if result != "":
+                text_file['new_name'] = result
+            else:
+                text_file['new_name'] = text_file['current_name'].replace(".pdf", "")
+
 
             files_with_name.append(text_file)
             self.get_value_to_progressbar(i)

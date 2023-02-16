@@ -15,7 +15,7 @@ class TextSearch:
 
             if match:
                 document_number = re.sub("(\/\s?)", "", match.group(0))
-                document_number = document_number[:-4]
+                document_number = document_number[:-4] + " " + document_number[-4:]
                 return document_number
             else:
                 print("No se encontró el número de juicio.")
@@ -85,12 +85,14 @@ class TextSearch:
         document = self.get_type_document()
         office = self.get_office_number()
         final_name = ""
-        if number is not None:
-            final_name += f"OF {number} "
         if document is not None:
             final_name += f"{document} "
         if office is not None:
-            final_name += f"{office}"
+            final_name += f"{number} "
+        if number is not None:
+            # if final_name == "":
+            #     final_name += " "
+            final_name += f"OF {office}"
 
         if final_name != "":
             return final_name
